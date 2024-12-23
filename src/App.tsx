@@ -6,6 +6,11 @@ import ScoreBoard from "./components/scoreBoard";
 import "./App.css";
 import YuGiOhPhoto from "../src/assets/Yu-Gi-OhLogo.webp";
 
+interface Card {
+  name: string;
+  image: string;
+}
+
 function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -14,8 +19,8 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [winGame, setWinGame] = useState(false);
   const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
-  const [clickedCards, setClickedCards] = useState([]);
+  const [data, setData] = useState<Card[] | null>(null);
+  const [clickedCards, setClickedCards] = useState<string[]>([]);
   // const [cards, setCards] = useState([]);
 
   // Function to fetch API for 12 random cards
@@ -42,9 +47,9 @@ function App() {
     }
   }
 
-  useEffect(() => {
+  const getNewYuGiOhCards = useEffect(() => {
     getYuGiOhCards();
-  }, []);
+  }, [gameOver]);
 
   function handleCardClick(cardName) {
     if (clickedCards.includes(cardName)) {
@@ -61,6 +66,7 @@ function App() {
       if (newClickedCards.length === 12) {
         setWinGame(true);
         setGameOver(true);
+        setHighScore(12);
         setScore(0);
         setClickedCards([]);
         return (
@@ -71,6 +77,7 @@ function App() {
       }
 
       setScore(score + 1);
+
       if (score + 1 > highScore) {
         setHighScore(score + 1);
       }
