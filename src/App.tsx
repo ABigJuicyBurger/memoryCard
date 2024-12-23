@@ -5,34 +5,44 @@ import DisplayCards from "./components/displayCards";
 import ScoreBoard from "./components/scoreBoard";
 import "./App.css";
 import YuGiOhPhoto from "../src/assets/Yu-Gi-OhLogo.webp";
+import React from "react";
+import { Card } from "./types/types";
 
-interface Card {
-  name: string;
-  image: string;
+declare module "*.webp" {
+  const value: string;
+  export default value;
+}
+interface YuGiOhApiResponse {
+  data: {
+    name: string;
+    card_images: {
+      image_url_small: string;
+    }[];
+  }[];
 }
 
 function App() {
-  const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
-  const [loading, setIsLoading] = useState(true);
-  const [startGame, setStartGame] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [winGame, setWinGame] = useState(false);
+  const [score, setScore] = useState<number>(0);
+  const [highScore, setHighScore] = useState<number>(0);
+  const [loading, setIsLoading] = useState<boolean>(true);
+  const [startGame, setStartGame] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [winGame, setWinGame] = useState<boolean>(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState<Card[] | null>(null);
   const [clickedCards, setClickedCards] = useState<string[]>([]);
   // const [cards, setCards] = useState([]);
 
   // Function to fetch API for 12 random cards
-  async function getYuGiOhCards() {
+  async function getYuGiOhCards(): Promise<void> {
     setIsLoading(true);
     setError(null);
     try {
-      const randomOffset = Math.floor(Math.random() * 11000);
-      const response = await fetch(
+      const randomOffset: number = Math.floor(Math.random() * 11000);
+      const response: Response = await fetch(
         `https://db.ygoprodeck.com/api/v7/cardinfo.php?num=12&offset=${randomOffset}&sort=random`
       );
-      const fetchedData = await response.json();
+      const fetchedData: YuGiOhApiResponse = await response.json();
       const simplifiedCards = fetchedData.data.map((card) => ({
         name: card.name,
         image: card.card_images[0].image_url_small,
@@ -41,17 +51,16 @@ function App() {
       console.log(simplifiedCards);
       setData(simplifiedCards);
     } catch (error) {
-      setError(error ? Error.message : "Something went wrong");
+      setError(error ? error.message : "Something went wrong");
     } finally {
       setIsLoading(false);
     }
   }
-
   const getNewYuGiOhCards = useEffect(() => {
     getYuGiOhCards();
   }, [gameOver]);
 
-  function handleCardClick(cardName) {
+  function handleCardClick(cardName: string): JSX.Element | void {
     if (clickedCards.includes(cardName)) {
       // Game over
       setGameOver(true);
@@ -59,7 +68,7 @@ function App() {
       setClickedCards([]);
     } else {
       // keep going
-      const newClickedCards = [...clickedCards, cardName];
+      const newClickedCards: string[] = [...clickedCards, cardName];
       setClickedCards(newClickedCards);
 
       // Win condition check
@@ -69,11 +78,6 @@ function App() {
         setHighScore(12);
         setScore(0);
         setClickedCards([]);
-        return (
-          <div>
-            <h1>You won!</h1>
-          </div>
-        );
       }
 
       setScore(score + 1);
@@ -101,7 +105,7 @@ function App() {
             Play Again{" "}
           </button>
         </div>
-      ) : startGame ? (
+      ) : startGame && data ? (
         <>
           <DisplayCards onClick={handleCardClick} data={data} />
           <ScoreBoard score={score} highScore={highScore} />
