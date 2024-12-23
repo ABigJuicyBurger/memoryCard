@@ -1,4 +1,3 @@
-import React from "react";
 import { DisplayCardsProps } from "../types/types";
 
 export default function DisplayCards({ data, onClick }: DisplayCardsProps) {

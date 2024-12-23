@@ -5,13 +5,8 @@ import DisplayCards from "./components/displayCards";
 import ScoreBoard from "./components/scoreBoard";
 import "./App.css";
 import YuGiOhPhoto from "../src/assets/Yu-Gi-OhLogo.webp";
-import React from "react";
 import { Card } from "./types/types";
 
-declare module "*.webp" {
-  const value: string;
-  export default value;
-}
 interface YuGiOhApiResponse {
   data: {
     name: string;
@@ -28,7 +23,7 @@ function App() {
   const [startGame, setStartGame] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [winGame, setWinGame] = useState<boolean>(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Card[] | null>(null);
   const [clickedCards, setClickedCards] = useState<string[]>([]);
   // const [cards, setCards] = useState([]);
@@ -51,7 +46,11 @@ function App() {
       console.log(simplifiedCards);
       setData(simplifiedCards);
     } catch (error) {
-      setError(error ? error.message : "Something went wrong");
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setIsLoading(false);
     }

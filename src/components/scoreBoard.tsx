@@ -1,4 +1,6 @@
-export default function ScoreBoard({ score, highScore }) {
+import { ScoreBoardProps } from "../types/types";
+
+export default function ScoreBoard({ score, highScore }: ScoreBoardProps) {
   return (
     <div className="score-board">
       <h1>Current Score: {score}</h1>
