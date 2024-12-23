@@ -1,0 +1,53 @@
+#root {
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  --shadow-purple: #1a1a2e;
+  --millenium-gold: #ffd700;
+  --dark-accent: #16213e;
+}
+
+body {
+  background: #1a1a2e;
+  color: #ffd700;
+}
+
+.score-board {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  margin: 0 auto; /* grid centering */
+  gap: 0;
+}
+
+.card {
+  width: 110%;
+  padding: 0;
+  margin: 0;
+  background: var(--dark-accent);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card img {
+  width: 55%;
+  padding: 1em;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--millenium-gold);
+  color: var(--shadow-purple);
+}
+
+.title img {
+  display: flex;
+}
